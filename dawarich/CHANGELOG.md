@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.23.0-1
+
+- Upgrade base image to Dawarich [1.16.0](https://github.com/Freika/dawarich/releases/tag/1.16.0), [1.17.0](https://github.com/Freika/dawarich/releases/tag/1.17.0), [1.18.0](https://github.com/Freika/dawarich/releases/tag/1.18.0), [1.18.1](https://github.com/Freika/dawarich/releases/tag/1.18.1), [1.19.0](https://github.com/Freika/dawarich/releases/tag/1.19.0), [1.20.0](https://github.com/Freika/dawarich/releases/tag/1.20.0), [1.20.1](https://github.com/Freika/dawarich/releases/tag/1.20.1), [1.21.0](https://github.com/Freika/dawarich/releases/tag/1.21.0), [1.22.0](https://github.com/Freika/dawarich/releases/tag/1.22.0), [1.23.0](https://github.com/Freika/dawarich/releases/tag/1.23.0). Highlights: geofencing with webhooks, archivable places, achievement cards, a combined Stats/Insights page, and a security audit's fixes (2FA on OAuth sign-in, stricter integration requests)
+- Add `curl` and `ca-certificates` to the add-on image: the Dawarich image no longer ships `curl`, which the add-on's build and startup scripts need
+- **Integrations no longer follow redirects** (Immich, Photoprism, AirTrail, TeslaMate, TREK). If a URL redirects (e.g. `http://` to `https://`), save the final URL in Settings → Integrations
+- **A Place tagged "home" becomes your Home** on upgrade, and Dawarich then looks for trips around it. Turn off "Find trips automatically" in Settings → General → Features to avoid that
+- **Back up before upgrading, and let first boot finish.** Migrations and background jobs (places, tracks, visit re-detection, achievements) can take a while on large histories
+- The add-on keeps running Sidekiq as its own service; no add-on config changes required
+- **Archives no longer carry integration credentials.** Account exports omit Immich, Photoprism and AirTrail keys and the TeslaMate password, and importing an archive does not restore integration connections. After moving data to a new instance, reconnect integrations in Settings → Integrations
+- `/` now redirects to the sign-in page (the landing page is gone). Point uptime checks at `/api/v1/health`
+- Fog of War radius and threshold settings were removed; track splitting and GPS noise filtering moved to Settings → Data processing
+- `GET /api/v1/settings` no longer returns integration API keys, and a visit's `place` can be `null`
+
 ## 1.15.3-2
 
 - Fix the map disappearing in the Home Assistant sidebar: the new vendored MapLibre module's importmap URL missed the ingress prefix, so browsers requested it from Home Assistant and refused its response as JavaScript
